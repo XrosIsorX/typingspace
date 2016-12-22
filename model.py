@@ -1,8 +1,10 @@
 import arcade.key
 from random import randint
 
-SHIP_SPAWN_TIME = 2
-SHIP_SHOT_TIME = 2
+SHIP_SPAWN = 3
+SHIP_SHOT = 3
+SHIP_SPAWN_TIME = 3
+SHIP_SHOT_TIME = 3
 
 class Model:
     def __init__(self, world, x, y, width, height):
@@ -63,7 +65,7 @@ class TypingWord():
         self.index = 0
 
 class World:
-    hp = 3
+    hp = 5
     score = 0
 
     def __init__(self, width, height):
@@ -104,6 +106,12 @@ class World:
             self.enemys.append(Spacecraft(self, randint(0, 900), randint(400, 600), 64 ,128))
             self.spawn_time = 0
 
+    def update_level(self):
+        global SHIP_SPAWN_TIME
+        SHIP_SPAWN_TIME = SHIP_SPAWN - ((self.score % 5) * 0.1)
+        global SHIP_SHOT_TIME
+        SHIP_SHOT_TIME = SHIP_SHOT - ((self.score % 10) * 0.1)
+
     def animate(self, delta_time):
         self.spawn_ship()
         for ship in self.enemys:
@@ -113,6 +121,7 @@ class World:
         for laser in self.lasers:
             laser.animate(delta_time)
         self.update_word()
+        self.update_level()
 
         self.spawn_time += delta_time
 
