@@ -33,6 +33,7 @@ class SpaceGameWindow(arcade.Window):
         self.bullet_texture = arcade.load_texture('images/bullet.png')
         self.laser_texture = arcade.load_texture('images/laser.png')
         self.bomb_texture = arcade.load_texture('images/bomb.png')
+        self.end_texture = arcade.load_texture('images/GG.png')
 
     def draw_laser(self):
         for laser in self.world.lasers:
@@ -48,9 +49,13 @@ class SpaceGameWindow(arcade.Window):
             arcade.draw_texture_rectangle(ship.x, ship.y, ship.width, ship.height, self.enemy_texture)
 
     def draw_status(self):
-        arcade.draw_text(str(self.world.spawn_time), self.width - 550, self.height - 30, arcade.color.WHITE, 20)
-        arcade.draw_text("HP :" + str(self.world.hp), 20, 20, arcade.color.WHITE, 20)
-        arcade.draw_text("SCORE : " + str(self.world.score), 20, 620, arcade.color.WHITE, 20)
+        if self.world.hp <= 0:
+            arcade.draw_texture_rectangle(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT, self.background_texture)
+            arcade.draw_text("YOUR SCORE : " + str(self.world.score), 100, 300, arcade.color.WHITE, 80)
+        else:
+            arcade.draw_text(str(self.world.spawn_time), self.width - 550, self.height - 30, arcade.color.WHITE, 20)
+            arcade.draw_text("HP :" + str(self.world.hp), 20, 20, arcade.color.WHITE, 20)
+            arcade.draw_text("SCORE : " + str(self.world.score), 20, 620, arcade.color.WHITE, 20)
 
     def draw_word(self):
         for i in range(len(self.world.typing_word.word)):
@@ -69,8 +74,8 @@ class SpaceGameWindow(arcade.Window):
 
         self.draw_enemy()
         self.draw_bullet()
-        self.draw_status()
         self.draw_word()
+        self.draw_status()
 
     def animate(self, delta_time):
         self.world.animate(delta_time)
