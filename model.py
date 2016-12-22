@@ -1,8 +1,8 @@
 import arcade.key
 from random import randint
 
-SHIP_SPAWN_TIME = 1
-SHIP_SHOT_TIME = 1
+SHIP_SPAWN_TIME = 2
+SHIP_SHOT_TIME = 2
 
 class Model:
     def __init__(self, world, x, y):
@@ -52,6 +52,9 @@ class World:
     hp = 3
 
     def __init__(self, width, height):
+        self.word = []
+        self.set_word()
+
         self.width = width
         self.height = height
 
@@ -59,13 +62,24 @@ class World:
 
         self.enemys = []
         self.bullets = []
-        self.typing_word = TypingWord(self, 'abc')
+        random = randint(0,len(self.word)-1)
+        self.typing_word = TypingWord(self, self.random_word())
+
+    def random_word(self):
+        return self.word[randint(0,len(self.word))-1]
+
+    def set_word(self):
+        openfile = open('word.txt')
+        lines = openfile.readlines()
+        for line in lines:
+            item = line.strip()
+            self.word.append(item)
 
     def update_word(self):
          if len(self.typing_word.word) == self.typing_word.index:
              if len(self.enemys) > 0:
                  self.enemys.remove(self.enemys[0])
-                 self.typing_word.word = 'hid'
+                 self.typing_word.word = self.random_word()
                  self.typing_word.index = 0
 
     def spawn_ship(self):

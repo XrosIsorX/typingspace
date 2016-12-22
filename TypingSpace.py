@@ -32,6 +32,7 @@ class SpaceGameWindow(arcade.Window):
         self.enemy_texture = arcade.load_texture('images/ship.png')
         self.bullet_texture = arcade.load_texture('images/bullet.png')
 
+
     def draw_bullet(self):
         for bullet in self.world.bullets:
             arcade.draw_texture_rectangle(bullet.x, bullet.y, bullet.width, bullet.height, self.bullet_texture)
