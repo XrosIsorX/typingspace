@@ -1,8 +1,8 @@
 import arcade.key
 from random import randint
 
-MODE_STAMINA = 0
-MODE_DEFENSE = 1
+SHIP_SPAWN_TIME = 1
+SHIP_SHOT_TIME = 1
 
 class Model:
     def __init__(self, world, x, y):
@@ -10,46 +10,77 @@ class Model:
         self.x = x
         self.y = y
 
-class Spacecraft(Model):
+class Bullet(Model):
+    SPEED = 10
     def __init__(self, world, x, y, width, height):
         super().__init__(world, x, y)
         self.width = width
         self.height = height
 
-    def shot(self):
-        self.x = 0
+    def animate(self, delta_time):
+        self.y -= self.SPEED
+        self.hit()
 
-class typingWord():
+    def hit(self):
+        if self.y < 140:
+            self.world.bullets.remove(self)
+
+
+class Spacecraft(Model):
+    def __init__(self, world, x, y, width, height):
+        super().__init__(world, x, y)
+        self.width = width
+        self.height = height
+        self.shot_time = 0
+
+    def animate(self, delta_time):
+        self.shot_time += delta_time
+        if self.shot_time > SHIP_SHOT_TIME:
+            self.shot()
+            self.shot_time = 0
+
+    def shot(self):
+        self.world.bullets.append(Bullet(self.world, self.x, self.y, 11, 23))
+
+class TypingWord():
     def __init__(self, world, word):
         self.word = word
         self.index = 0
 
 class World:
+    hp = 3
+
     def __init__(self, width, height):
         self.width = width
         self.height = height
 
-        self.count_time = 0
+        self.spawn_time = 0
 
         self.enemys = []
-        self.typing_word = typingWord(self, 'abc')
+        self.bullets = []
+        self.typing_word = TypingWord(self, 'abc')
 
     def update_word(self):
          if len(self.typing_word.word) == self.typing_word.index:
              if len(self.enemys) > 0:
+                 self.enemys.remove(self.enemys[0])
                  self.typing_word.word = 'hid'
                  self.typing_word.index = 0
 
     def spawn_ship(self):
-        if self.count_time > 1:
+        if self.spawn_time > SHIP_SPAWN_TIME:
             self.enemys.append(Spacecraft(self, randint(0, 900), randint(400, 600), 64 ,128))
-            self.count_time = 0
+            self.spawn_time = 0
 
     def animate(self, delta_time):
         self.spawn_ship()
+        for ship in self.enemys:
+            ship.animate(delta_time)
+        for bullet in self.bullets:
+            bullet.animate(delta_time)
         self.update_word()
 
-        self.count_time += delta_time
+        self.spawn_time += delta_time
 
     def on_key_press(self, key, key_modifiers):
         if chr(key) == self.typing_word.word[self.typing_word.index]:
