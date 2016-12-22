@@ -42,6 +42,7 @@ class SpaceGameWindow(arcade.Window):
 
     def draw_status(self):
         arcade.draw_text(str(self.world.spawn_time), self.width - 550, self.height - 30, arcade.color.WHITE, 20)
+        arcade.draw_text("HP :" + str(self.world.hp), 20, 20, arcade.color.WHITE, 20)
 
     def draw_word(self):
         for i in range(len(self.world.typing_word.word)):

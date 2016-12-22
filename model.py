@@ -24,6 +24,7 @@ class Bullet(Model):
     def hit(self):
         if self.y < 140:
             self.world.bullets.remove(self)
+            self.world.hp -= 1
 
 
 class Spacecraft(Model):
