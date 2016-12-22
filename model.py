@@ -32,12 +32,13 @@ class World:
         self.count_time = 0
 
         self.enemys = []
-        self.typing_word = typingWord(self, 'ABC')
+        self.typing_word = typingWord(self, 'abc')
 
-    # def update_word(self):
-    #     if
-    # # def typing(self):
-    # #
+    def update_word(self):
+         if len(self.typing_word.word) == self.typing_word.index:
+             if len(self.enemys) > 0:
+                 self.typing_word.word = 'hid'
+                 self.typing_word.index = 0
 
     def spawn_ship(self):
         if self.count_time > 1:
@@ -46,5 +47,10 @@ class World:
 
     def animate(self, delta_time):
         self.spawn_ship()
+        self.update_word()
 
         self.count_time += delta_time
+
+    def on_key_press(self, key, key_modifiers):
+        if chr(key) == self.typing_word.word[self.typing_word.index]:
+            self.typing_word.index += 1

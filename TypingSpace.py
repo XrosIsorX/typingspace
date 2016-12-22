@@ -40,10 +40,12 @@ class SpaceGameWindow(arcade.Window):
 
     def draw_word(self):
         for i in range(len(self.world.typing_word.word)):
-            self.picture_name = 'images/' + self.world.typing_word.word[i] + '.png'
+            if self.world.typing_word.index > i:
+                self.picture_name = 'images/' + self.world.typing_word.word[i] + 'R' + '.png'
+            else:
+                self.picture_name = 'images/' + self.world.typing_word.word[i] + '.png'
             self.picture_word = arcade.load_texture(self.picture_name)
             arcade.draw_texture_rectangle(100 + (i * 50), 100, 50, 50, self.picture_word)
-
 
     def on_draw(self):
         arcade.start_render()
@@ -57,6 +59,8 @@ class SpaceGameWindow(arcade.Window):
     def animate(self, delta_time):
         self.world.animate(delta_time)
 
+    def on_key_press(self, key, key_modifiers):
+        self.world.on_key_press(key, key_modifiers)
 
 if __name__ == '__main__':
     window = SpaceGameWindow(SCREEN_WIDTH, SCREEN_HEIGHT)
