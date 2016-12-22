@@ -14,7 +14,6 @@ class ModelSprite(arcade.Sprite):
     def sync_with_model(self):
         if self.model:
             self.set_position(self.model.x, self.model.y)
-            self.angle = self.model.angle
 
     def draw(self):
         self.sync_with_model()
@@ -29,10 +28,15 @@ class SpaceGameWindow(arcade.Window):
         self.world = World(width, height)
         self.background_texture = arcade.load_texture('images/backgroundSpace.jpg')
 
+        self.spacecraft_sprite = []
+        for spacecraft in self.world.enemys:
+            self.spacecraft_sprite = ModelSprite('images/ship.png', model = spacecraft)
+
     def on_draw(self):
         arcade.start_render()
         arcade.draw_texture_rectangle(640, 360, 1280, 720,
                                               self.background_texture)
+        self.spacecraft_sprite.draw()
 
     def animate(self, delta_time):
         self.world.animate(delta_time)
