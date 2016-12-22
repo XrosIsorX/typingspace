@@ -5,17 +5,34 @@ SHIP_SPAWN_TIME = 2
 SHIP_SHOT_TIME = 2
 
 class Model:
-    def __init__(self, world, x, y):
+    def __init__(self, world, x, y, width, height):
         self.world = world
+        self.width = width
+        self.height = height
         self.x = x
         self.y = y
+
+class Laser(Model):
+    LASER_TIME = 0.2
+    def __init__(self, world, x, y, width, height):
+        super().__init__(world, x ,y, width, height)
+        self.delay_time = 0
+
+    def animate(self, delta_time):
+        self.delay_time += delta_time
+        if self.delay_time > self.LASER_TIME:
+            print(self.delay_time)
+            self.disappear()
+            self.delay_time = 0
+
+    def disappear(self):
+        self.world.lasers.remove(self)
+
 
 class Bullet(Model):
     SPEED = 10
     def __init__(self, world, x, y, width, height):
-        super().__init__(world, x, y)
-        self.width = width
-        self.height = height
+        super().__init__(world, x, y, width, height)
 
     def animate(self, delta_time):
         self.y -= self.SPEED
@@ -26,12 +43,9 @@ class Bullet(Model):
             self.world.bullets.remove(self)
             self.world.hp -= 1
 
-
 class Spacecraft(Model):
     def __init__(self, world, x, y, width, height):
-        super().__init__(world, x, y)
-        self.width = width
-        self.height = height
+        super().__init__(world, x, y, width, height)
         self.shot_time = 0
 
     def animate(self, delta_time):
@@ -50,6 +64,7 @@ class TypingWord():
 
 class World:
     hp = 3
+    score = 0
 
     def __init__(self, width, height):
         self.word = []
@@ -62,7 +77,7 @@ class World:
 
         self.enemys = []
         self.bullets = []
-        random = randint(0,len(self.word)-1)
+        self.lasers = []
         self.typing_word = TypingWord(self, self.random_word())
 
     def random_word(self):
@@ -78,8 +93,10 @@ class World:
     def update_word(self):
          if len(self.typing_word.word) == self.typing_word.index:
              if len(self.enemys) > 0:
+                 self.lasers.append(Laser(self, self.enemys[0].x, self.enemys[0].y, 20, 600))
                  self.enemys.remove(self.enemys[0])
                  self.typing_word.word = self.random_word()
+                 self.score += 1
                  self.typing_word.index = 0
 
     def spawn_ship(self):
@@ -93,6 +110,8 @@ class World:
             ship.animate(delta_time)
         for bullet in self.bullets:
             bullet.animate(delta_time)
+        for laser in self.lasers:
+            laser.animate(delta_time)
         self.update_word()
 
         self.spawn_time += delta_time
