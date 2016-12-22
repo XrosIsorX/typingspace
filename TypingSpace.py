@@ -36,7 +36,14 @@ class SpaceGameWindow(arcade.Window):
             arcade.draw_texture_rectangle(ship.x, ship.y, ship.width, ship.height, self.enemy_texture)
 
     def draw_status(self):
-            arcade.draw_text(str(self.world.count_time), self.width - 550, self.height - 30, arcade.color.WHITE, 20)
+        arcade.draw_text(str(self.world.count_time), self.width - 550, self.height - 30, arcade.color.WHITE, 20)
+
+    def draw_word(self):
+        for i in range(len(self.world.typing_word.word)):
+            self.picture_name = 'images/' + self.world.typing_word.word[i] + '.png'
+            self.picture_word = arcade.load_texture(self.picture_name)
+            arcade.draw_texture_rectangle(100 + (i * 50), 100, 50, 50, self.picture_word)
+
 
     def on_draw(self):
         arcade.start_render()
@@ -45,9 +52,11 @@ class SpaceGameWindow(arcade.Window):
 
         self.draw_enemy()
         self.draw_status()
+        self.draw_word()
 
     def animate(self, delta_time):
         self.world.animate(delta_time)
+
 
 if __name__ == '__main__':
     window = SpaceGameWindow(SCREEN_WIDTH, SCREEN_HEIGHT)
