@@ -92,14 +92,18 @@ class World:
             item = line.strip()
             self.word.append(item)
 
+    def reset_typing_word(self):
+        self.typing_word.word = self.random_word()
+        self.typing_word.index = 0
+
     def update_word(self):
          if len(self.typing_word.word) == self.typing_word.index:
              if len(self.enemys) > 0:
                  self.lasers.append(Laser(self, self.enemys[0].x, self.enemys[0].y, 20, 600))
                  self.enemys.remove(self.enemys[0])
-                 self.typing_word.word = self.random_word()
                  self.score += 1
-                 self.typing_word.index = 0
+                 self.reset_typing_word()
+
 
     def spawn_ship(self):
         if self.spawn_time > SHIP_SPAWN_TIME:
@@ -125,6 +129,25 @@ class World:
 
         self.spawn_time += delta_time
 
+    def remove_all_enemys(self):
+        length = len(self.enemys)
+        for ship in range(length):
+            self.enemys.remove(self.enemys[0])
+
+    def retry(self):
+        self.hp = 5
+        global SHIP_SPAWN_TIME
+        SHIP_SPAWN_TIME = SHIP_SPAWN
+        global SHIP_SHOT_TIME
+        SHIP_SHOT_TIME = SHIP_SHOT
+        self.remove_all_enemys()
+        spawn_time = 0
+        self.reset_typing_word()
+        self.score = 0
+
+
     def on_key_press(self, key, key_modifiers):
         if chr(key) == self.typing_word.word[self.typing_word.index]:
             self.typing_word.index += 1
+        if key == arcade.key.ENTER and self.hp <= 0:
+            self.retry()

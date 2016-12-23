@@ -64,7 +64,7 @@ class SpaceGameWindow(arcade.Window):
             else:
                 self.picture_name = 'images/' + self.world.typing_word.word[i] + '.png'
             self.picture_word = arcade.load_texture(self.picture_name)
-            arcade.draw_texture_rectangle(100 + (i * 50), 100, 50, 50, self.picture_word)
+            arcade.draw_texture_rectangle(110 + (i * 50), 50, 50, 50, self.picture_word)
 
     def on_draw(self):
         arcade.start_render()
