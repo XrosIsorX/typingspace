@@ -86,7 +86,7 @@ class World:
         return self.word[randint(0,len(self.word))-1]
 
     def set_word(self):
-        openfile = open('word.txt')
+        openfile = open('words.txt')
         lines = openfile.readlines()
         for line in lines:
             item = line.strip()

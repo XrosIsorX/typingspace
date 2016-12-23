@@ -54,7 +54,7 @@ class SpaceGameWindow(arcade.Window):
             arcade.draw_text("YOUR SCORE : " + str(self.world.score), 100, 300, arcade.color.WHITE, 80)
         else:
             arcade.draw_text(str(self.world.spawn_time), self.width - 550, self.height - 30, arcade.color.WHITE, 20)
-            arcade.draw_text("HP :" + str(self.world.hp), 20, 20, arcade.color.WHITE, 20)
+            arcade.draw_text("HP :" + str(self.world.hp), 820, 620, arcade.color.WHITE, 20)
             arcade.draw_text("SCORE : " + str(self.world.score), 20, 620, arcade.color.WHITE, 20)
 
     def draw_word(self):
@@ -64,7 +64,7 @@ class SpaceGameWindow(arcade.Window):
             else:
                 self.picture_name = 'images/' + self.world.typing_word.word[i] + '.png'
             self.picture_word = arcade.load_texture(self.picture_name)
-            arcade.draw_texture_rectangle(110 + (i * 50), 50, 50, 50, self.picture_word)
+            arcade.draw_texture_rectangle(40 + (i * 50), 50, 50, 50, self.picture_word)
 
     def on_draw(self):
         arcade.start_render()
