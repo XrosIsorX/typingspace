@@ -23,7 +23,6 @@ class Laser(Model):
     def animate(self, delta_time):
         self.delay_time += delta_time
         if self.delay_time > self.LASER_TIME:
-            print(self.delay_time)
             self.disappear()
             self.delay_time = 0
 
@@ -112,9 +111,9 @@ class World:
 
     def update_level(self):
         global SHIP_SPAWN_TIME
-        SHIP_SPAWN_TIME = SHIP_SPAWN - ((self.score % 5) * 0.1)
+        SHIP_SPAWN_TIME = SHIP_SPAWN - ((self.score / 5) * 0.1)
         global SHIP_SHOT_TIME
-        SHIP_SHOT_TIME = SHIP_SHOT - ((self.score % 10) * 0.1)
+        SHIP_SHOT_TIME = SHIP_SHOT - ((self.score / 10) * 0.1)
 
     def animate(self, delta_time):
         self.spawn_ship()
@@ -134,6 +133,11 @@ class World:
         for ship in range(length):
             self.enemys.remove(self.enemys[0])
 
+    def remove_all_bullet(self):
+        length = len(self.bullets)
+        for bullet in range(length):
+            self.bullets.remove(self.bullets[0])
+
     def retry(self):
         self.hp = 5
         global SHIP_SPAWN_TIME
@@ -141,6 +145,7 @@ class World:
         global SHIP_SHOT_TIME
         SHIP_SHOT_TIME = SHIP_SHOT
         self.remove_all_enemys()
+        self.remove_all_bullet()
         spawn_time = 0
         self.reset_typing_word()
         self.score = 0
