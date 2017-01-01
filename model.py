@@ -68,6 +68,11 @@ class World:
     score = 0
 
     def __init__(self, width, height):
+        self.enemy_explosion_sound = arcade.sound.load_sound("sounds/Eexplosion.mp3")
+        self.my_explosion_sound = arcade.sound.load_sound("sounds/MyExplosion.wav")
+
+        self.is_bombed = True
+
         self.word = []
         self.set_word()
 
@@ -100,9 +105,9 @@ class World:
              if len(self.enemys) > 0:
                  self.lasers.append(Laser(self, self.enemys[0].x, self.enemys[0].y, 20, 600))
                  self.enemys.remove(self.enemys[0])
+                 arcade.sound.play_sound(self.enemy_explosion_sound)
                  self.score += 1
                  self.reset_typing_word()
-
 
     def spawn_ship(self):
         if self.spawn_time > SHIP_SPAWN_TIME:
@@ -125,8 +130,14 @@ class World:
             laser.animate(delta_time)
         self.update_word()
         self.update_level()
+        self.update_explosion_sound()
 
         self.spawn_time += delta_time
+
+    def update_explosion_sound(self):
+        if self.hp <= 0 and self.is_bombed == True:
+            arcade.sound.play_sound(self.my_explosion_sound)
+            self.is_bombed = False
 
     def remove_all_enemys(self):
         length = len(self.enemys)
@@ -149,6 +160,7 @@ class World:
         spawn_time = 0
         self.reset_typing_word()
         self.score = 0
+        self.is_bombed = True
 
 
     def on_key_press(self, key, key_modifiers):
