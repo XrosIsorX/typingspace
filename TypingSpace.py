@@ -60,9 +60,9 @@ class SpaceGameWindow(arcade.Window):
     def draw_word(self):
         for i in range(len(self.world.typing_word.word)):
             if self.world.typing_word.index > i:
-                self.picture_name = 'images/' + self.world.typing_word.word[i] + 'R' + '.png'
+                self.picture_name = 'images/' + self.world.typing_word.word[i].upper() + 'R' + '.png'
             else:
-                self.picture_name = 'images/' + self.world.typing_word.word[i] + '.png'
+                self.picture_name = 'images/' + self.world.typing_word.word[i].upper() + '.png'
             self.picture_word = arcade.load_texture(self.picture_name)
             arcade.draw_texture_rectangle(40 + (i * 50), 50, 50, 50, self.picture_word)
 
